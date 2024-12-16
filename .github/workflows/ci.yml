@@ -22,4 +22,4 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' && matrix.node-version == '22.x' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: doc/api
+          folder: lib/apidoc
