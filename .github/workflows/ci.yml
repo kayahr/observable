@@ -15,8 +15,7 @@ jobs:
       - name: Build
         run: npm ci
       - name: Test
-        with:
-          run: npm test
+        run: npm test
       - name: Build API Doc
         run: npm run apidoc
       - name: Deploy API Doc
