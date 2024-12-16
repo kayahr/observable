@@ -1,5 +1,7 @@
 # Observable
 
+[GitHub] | [NPM] | [API Doc]
+
 A simple Observable implementation written in TypeScript and complying to the [TC39 Observable Tests](https://www.npmjs.com/package/es-observable-tests).
 
 The library is very small (around 3KB when minified) and only depends on the [symbol-observable] polyfill.
@@ -69,4 +71,7 @@ function foo(subscribable: Subscribable<number>): void {
 }
 ```
 
+[API Doc]: https://kayahr.github.io/observable/
+[GitHub]: https://github.com/kayahr/observable
+[NPM]: https://www.npmjs.com/package/@kayahr/observable
 [symbol-observable]: https://www.npmjs.com/package/symbol-observable
