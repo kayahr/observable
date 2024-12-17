@@ -9,6 +9,7 @@ import * as exports from "../main/index.js";
 import { Observable, type SubscribeArgs } from "../main/Observable.js";
 import { type ObservableLike } from "../main/ObservableLike.js";
 import { type CompleteObserver, type ErrorObserver, type NextObserver, type Observer } from "../main/Observer.js";
+import { SharedObservable } from "../main/SharedObservable.js";
 import { type Subscribable } from "../main/Subscribable.js";
 import { type SubscriberFunction } from "../main/SubscriberFunction.js";
 import { type Subscription } from "../main/Subscription.js";
@@ -20,7 +21,8 @@ describe("index", () => {
     it("exports relevant types and functions and nothing more", () => {
         // Check classes and enums
         expect({ ...exports }).toEqual({
-            Observable
+            Observable,
+            SharedObservable
         });
 
         // Interfaces and types can only be checked by TypeScript
