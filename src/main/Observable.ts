@@ -18,14 +18,14 @@ import { isIterable } from "./utils.js";
  */
 export interface ObservableConstructor<T> {
     /**
-     * Constructs a new observable.
+     * Constructs a new {@link Observable}.
      *
      * @param subscriber - The subscriber function.
      */
     new (subscriber: SubscriberFunction<T>): ObservableLike<T>;
 
     /**
-     * Converts items to an Observable.
+     * Converts any observable object or iterable to an {@link Observable}.
      *
      * @param items - The items to convert.
      * @return The created observable.
@@ -41,6 +41,9 @@ export interface ObservableConstructor<T> {
     from(observable: Subscribable<T> | Iterable<T>): ObservableLike<T>;
 }
 
+/**
+ * Subscriber arguments.
+ */
 export type SubscribeArgs<T = unknown> =
     | [ Observer<T> ]
     | [ (value: T) => void, ((error: Error) => void)?, (() => void)? ]
@@ -69,10 +72,22 @@ export class Observable<T> implements ObservableLike<T> {
         this.subscriber = subscriber;
     }
 
+    /**
+     * Converts items to an {@link Observable}.
+     *
+     * @param items - The items to convert.
+     * @returns The created observable.
+     */
     public static of<T>(...items: T[]): ObservableLike<T> {
         return createObservableOf<T>(this, Observable, ...items);
     }
 
+    /**
+     * Converts any observable object or iterable to an {@link Observable}.
+     *
+     * @param observable - The observable or iterable to convert.
+     * @returns The created observable.
+     */
     public static from<T>(observable: Subscribable<T> | Iterable<T>): ObservableLike<T> {
         return createObservableFrom<T>(this, Observable, observable);
     }
