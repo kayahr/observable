@@ -38,6 +38,30 @@ See [TC39 Observable Proposal](https://github.com/tc39/proposal-observable) for 
 
 While a standard Observable is unicast, in a lot of situations a multicast Observable is preferable. This library provides a specialized `SharedObservable` class for exactly this case. A shared observable is initialized on first subscribe and cleaned up on last unsubscribe. Beside of this there is no difference to the standard Observable.
 
+
+## Helper functions
+
+The `isSubscribable` type-guard function can be used to check if a given value is an object providing a `subscribe` method:
+
+```typescript
+import { isSubscribable } from "@kayahr/observable";
+
+if (isSubscribable(something)) {
+    something.subscribe(console.log);
+}
+```
+
+There is also an `isUnsubscribable` type-guard function to check if given value is an object providing an `unsubscribe` method:
+
+```typescript
+import { isUnsubscribable } from "@kayahr/observable";
+
+if (isUnsubscribable(something)) {
+    something.unsubscribe();
+}
+```
+
+
 ## RxJS compatibility
 
 RxJS' Observable implementation is not standard-conform, especially because it uses a `pipe` method which is not part of the proposed standard. So in order to use Observable instances of this library in RxJS pipes you have to convert the observable with RxJS' `from` function:

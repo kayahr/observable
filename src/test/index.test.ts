@@ -10,17 +10,19 @@ import { Observable, type SubscribeArgs } from "../main/Observable.js";
 import { type ObservableLike } from "../main/ObservableLike.js";
 import { type CompleteObserver, type ErrorObserver, type NextObserver, type Observer } from "../main/Observer.js";
 import { SharedObservable } from "../main/SharedObservable.js";
-import { type Subscribable } from "../main/Subscribable.js";
+import { isSubscribable, type Subscribable } from "../main/Subscribable.js";
 import { type SubscriberFunction } from "../main/SubscriberFunction.js";
 import { type Subscription } from "../main/Subscription.js";
 import { type SubscriptionObserver } from "../main/SubscriptionObserver.js";
 import { type TeardownLogic } from "../main/TeardownLogic.js";
-import { type Unsubscribable } from "../main/Unsubscribable.js";
+import { isUnsubscribable, type Unsubscribable } from "../main/Unsubscribable.js";
 
 describe("index", () => {
     it("exports relevant types and functions and nothing more", () => {
         // Check classes and enums
         expect({ ...exports }).toEqual({
+            isSubscribable,
+            isUnsubscribable,
             Observable,
             SharedObservable
         });
