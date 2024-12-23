@@ -12,7 +12,7 @@
     "repository": "github:kayahr/observable",
     "homepage": "https://github.com/kayahr/observable",
     "bugs": "https://github.com/kayahr/observable/issues",
-    "funding": "https://github.com/kayahr/datastream?sponsor=1",
+    "funding": "https://github.com/kayahr/observable?sponsor=1",
     "exports": "./lib/main/index.js",
     "publishConfig": {
         "access": "public"
@@ -35,7 +35,7 @@
         "prepare": "run-s install:browser clean build"
     },
     "devDependencies": {
-        "@kayahr/eslint-config": "3.1.0",
+        "@kayahr/eslint-config": "3.2.0",
         "@types/node": "22.10.2",
         "@vitest/browser": "2.1.8",
         "@vitest/coverage-v8": "2.1.8",
