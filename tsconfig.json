@@ -7,7 +7,7 @@
         "forceConsistentCasingInFileNames": true,
         "lib": [
             "ES2022",
-            "DOM",
+            "DOM"
         ],
         "module": "NodeNext",
         "newLine": "lf",
