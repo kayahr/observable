@@ -3,8 +3,6 @@
  * See LICENSE.md for licensing information.
  */
 
-import "symbol-observable";
-
 import type { Observer } from "./Observer.js";
 import type { Unsubscribable } from "./Unsubscribable.js";
 
