@@ -5,6 +5,7 @@
 
 import "symbol-observable";
 
+import type { InteropSubscribable } from "./interop.js";
 import { ObservableLike } from "./ObservableLike.js";
 import { Observer } from "./Observer.js";
 import { isSubscribable, Subscribable } from "./Subscribable.js";
@@ -82,7 +83,7 @@ export class Observable<T> implements ObservableLike<T> {
     }
 
     /** @inheritDoc */
-    public [Symbol.observable](): this {
+    public [Symbol.observable](): InteropSubscribable<T> {
         return this;
     }
 
@@ -101,9 +102,6 @@ export class Observable<T> implements ObservableLike<T> {
 
     /** @deprecated Use an observer instead of a complete callback */
     public subscribe(next: (value: T) => void, error: null | undefined, complete: () => void): Subscription;
-
-    /** @inheritDoc */
-    public subscribe(...args: SubscribeArgs<T>): Subscription;
 
     /** @inheritDoc */
     public subscribe(arg1: (Observer<T> | ((value: T) => void) | null | undefined),
@@ -160,7 +158,7 @@ export function createObservableFrom<T>(thisConstructor: ObservableConstructor<T
                 if (observable.constructor !== constructor) {
                     return new constructor(observer => observable.subscribe(observer));
                 }
-                return observable;
+                return observable as ObservableLike<T>;
             }
         }
         if (isSubscribable(observable)) {

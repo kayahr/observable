@@ -3,27 +3,30 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Observer } from "./Observer.js";
-import { Subscribable } from "./Subscribable.js";
-import type { SubscribeArgs } from "./SubscribeArgs.js";
-import { Subscription } from "./Subscription.js";
+import type { InteropObservable } from "./interop.js";
+import type { Observer } from "./Observer.js";
+import type { Subscription } from "./Subscription.js";
 
 /**
  * The base interface for observable objects.
  */
-export interface ObservableLike<T = unknown> extends Subscribable<T> {
-    /** @inheritDoc */
-    subscribe(observer: Observer<T>): Subscription;
-
-    /** @inheritDoc */
-    subscribe(onNext: (value: T) => void, onError?: (error: Error) => void, onComplete?: () => void):
-        Subscription;
-
-    /** @inheritDoc */
-    subscribe(...args: SubscribeArgs<T>): Subscription;
+export interface ObservableLike<T = unknown> extends InteropObservable<T> {
 
     /**
-     * Returns itself.
+     * Subscribes the given observer to this object.
+     *
+     * @param observer - The observer to subscribe.
+     * @return Object which can be used to unsubscribe the observer.
      */
-    [Symbol.observable](): ObservableLike<T>;
+    subscribe(observer: Observer<T>): Subscription;
+
+    /**
+     * Constructs a new observer using the given callback functions and subscribes it to this object.
+     *
+     * @param next     - Receives the next value in the sequence.
+     * @param error    - Receives the sequence error.
+     * @param complete -  Receives a completion notification.
+     * @return Object which can be used to unsubscribe the observer.
+     */
+    subscribe(next: (value: T) => void, error?: (error: Error) => void, complete?: () => void): Subscription;
 }
