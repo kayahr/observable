@@ -16,7 +16,7 @@ export interface Subscribable<T = unknown> {
      * @param observer - The observer to subscribe.
      * @return Object which can be used to unsubscribe the observer.
      */
-    subscribe(observer: Observer<T>): Unsubscribable;
+    subscribe(observer: Observer<T> | ((value: T) => void)): Unsubscribable;
 
     /**
      * Constructs a new observer using the given callback functions and subscribes it to this object.
