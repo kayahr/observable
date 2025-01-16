@@ -4,8 +4,6 @@
 
 A simple Observable implementation written in TypeScript and complying to the [TC39 Observable Tests](https://www.npmjs.com/package/es-observable-tests).
 
-The library is very small (around 3KB when minified) and only depends on the [symbol-observable] polyfill.
-
 
 ## Usage
 
