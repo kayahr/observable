@@ -6,11 +6,12 @@
 import { describe, expect, it } from "vitest";
 
 import * as exports from "../main/index.js";
-import { Observable, type SubscribeArgs } from "../main/Observable.js";
+import { Observable } from "../main/Observable.js";
 import { type ObservableLike } from "../main/ObservableLike.js";
 import { type CompleteObserver, type ErrorObserver, type NextObserver, type Observer } from "../main/Observer.js";
 import { SharedObservable } from "../main/SharedObservable.js";
 import { isSubscribable, type Subscribable } from "../main/Subscribable.js";
+import { type SubscribeArgs } from "../main/SubscribeArgs.js";
 import { type SubscriberFunction } from "../main/SubscriberFunction.js";
 import { type Subscription } from "../main/Subscription.js";
 import { type SubscriptionObserver } from "../main/SubscriptionObserver.js";

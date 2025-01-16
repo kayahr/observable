@@ -5,6 +5,7 @@
 
 import { Observer } from "./Observer.js";
 import { Subscribable } from "./Subscribable.js";
+import type { SubscribeArgs } from "./SubscribeArgs.js";
 import { Subscription } from "./Subscription.js";
 
 /**
@@ -19,16 +20,10 @@ export interface ObservableLike<T = unknown> extends Subscribable<T> {
         Subscription;
 
     /** @inheritDoc */
-    subscribe(...args: [ Observer<T> ] | [ (value: T) => void, ((error: Error) => void)?, (() => void)? ]):
-        Subscription;
+    subscribe(...args: SubscribeArgs<T>): Subscription;
 
     /**
      * Returns itself.
      */
-    [Symbol.observable]?(): ObservableLike<T>;
-
-    /**
-     * Returns itself. This is used as a fallback for environments which don't support `Symbol.observable`.
-     */
-    "@@observable"?(): ObservableLike<T>;
+    [Symbol.observable](): ObservableLike<T>;
 }

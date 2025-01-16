@@ -8,6 +8,7 @@ import "symbol-observable";
 import { ObservableLike } from "./ObservableLike.js";
 import { Observer } from "./Observer.js";
 import { isSubscribable, Subscribable } from "./Subscribable.js";
+import type { SubscribeArgs } from "./SubscribeArgs.js";
 import { SubscriberFunction } from "./SubscriberFunction.js";
 import { Subscription } from "./Subscription.js";
 import { SubscriptionImpl } from "./SubscriptionImpl.js";
@@ -40,18 +41,6 @@ export interface ObservableConstructor<T> {
      */
     from(observable: Subscribable<T> | Iterable<T>): ObservableLike<T>;
 }
-
-/**
- * Subscriber arguments.
- */
-export type SubscribeArgs<T = unknown> =
-    | [ Observer<T> ]
-    | [ (value: T) => void, ((error: Error) => void)?, (() => void)? ]
-    | [
-        (((value: T) => void) | null | undefined),
-        (((error: any) => void) | null | undefined)?,
-        ((() => void) | null | undefined)?
-    ];
 
 /**
  * Observable implementation.
@@ -92,11 +81,8 @@ export class Observable<T> implements ObservableLike<T> {
         return createObservableFrom<T>(this, Observable, observable);
     }
 
+    /** @inheritDoc */
     public [Symbol.observable](): this {
-        return this;
-    }
-
-    public "@@observable"(): this {
         return this;
     }
 
@@ -167,8 +153,7 @@ export function createObservableFrom<T>(thisConstructor: ObservableConstructor<T
             observer.complete();
         });
     } else if (observable instanceof Object) {
-        const observableFactory = (observable as Observable<T>)["@@observable"]
-            ?? (observable as Observable<T>)[Symbol.observable];
+        const observableFactory = (observable as Observable<T>)[Symbol.observable];
         if (observableFactory instanceof Function) {
             const observable = observableFactory();
             if (observable instanceof Object) {

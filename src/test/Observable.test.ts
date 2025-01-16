@@ -3,6 +3,8 @@
  * See LICENSE.md for licensing information.
  */
 
+import "symbol-observable";
+
 import { runTests as runObservableTests } from "es-observable-tests";
 import { from, merge, Subject } from "rxjs";
 import { describe, expect, it, vi } from "vitest";

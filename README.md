@@ -64,7 +64,13 @@ if (isUnsubscribable(something)) {
 
 ## RxJS compatibility
 
-RxJS' Observable implementation is not standard-conform, especially because it uses a `pipe` method which is not part of the proposed standard. So in order to use Observable instances of this library in RxJS pipes you have to convert the observable with RxJS' `from` function:
+RxJS' Observable implementation is not standard-conform, especially because it uses a `pipe` method which is not part of the proposed standard. RxJS unfortunately also does not use a polyfill for `Symbol.observable`, it just assumes that one is present or otherwise it falls back on using a non-standard `"@@observable"` string instead. To ensure compatibility between RxJS and any other observable implementation make sure to load a `Symbol.observable` polyfill like [symbol-observable] before importing RxJS:
+
+```typescript
+import "symbol-observable";
+```
+
+In order to use Observable instances of this library in RxJS pipes you have to convert the observable with RxJS' `from` function:
 
 ```typescript
 import { from } from "rxjs";
