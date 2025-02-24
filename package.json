@@ -49,7 +49,7 @@
         "typedoc": "0.27.6",
         "typedoc-github-theme": "0.2.1",
         "typescript": "5.7.3",
-        "vitest": "3.0.5"
+        "vitest": "3.0.7"
     },
     "dependencies": {
         "symbol-observable": "^4.0.0"
