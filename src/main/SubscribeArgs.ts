@@ -8,8 +8,8 @@ import type { Observer } from "./Observer.js";
 /**
  * Subscriber arguments.
  */
-export type SubscribeArgs<T = unknown> =
-    | [ Observer<T> ]
+export type SubscribeArgs<T = unknown>
+    = [ Observer<T> ]
     | [ (value: T) => void, ((error: Error) => void)?, (() => void)? ]
     | [
         (((value: T) => void) | null | undefined),
