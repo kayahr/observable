@@ -6,142 +6,143 @@
 import "symbol-observable";
 
 import { from } from "rxjs";
-import { describe, expect, it, vi } from "vitest";
+import { describe, it } from "node:test";
 
-import { SharedObservable } from "../main/SharedObservable.js";
-import { SubscriptionObserver } from "../main/SubscriptionObserver.js";
+import { SharedObservable } from "../main/SharedObservable.ts";
+import type { SubscriptionObserver } from "../main/SubscriptionObserver.ts";
+import { assertEquals, assertNotNull, assertSame } from "@kayahr/assert";
 
 describe("SharedObservable", () => {
-    it("runs subscriber function only on first subscribe", () => {
-        const fn = vi.fn();
+    it("runs subscriber function only on first subscribe", (context) => {
+        const fn = context.mock.fn();
         const o = new SharedObservable(fn);
-        expect(fn).not.toHaveBeenCalled();
+        assertSame(fn.mock.callCount(), 0);
         o.subscribe(() => {});
-        expect(fn).toHaveBeenCalledOnce();
-        fn.mockReset();
+        assertSame(fn.mock.callCount(), 1);
+        fn.mock.resetCalls();
         o.subscribe(() => {});
-        expect(fn).not.toHaveBeenCalled();
+        assertSame(fn.mock.callCount(), 0);
     });
-    it("runs teardown function only on last unsubscribe", () => {
-        const fn = vi.fn();
+    it("runs teardown function only on last unsubscribe", (context) => {
+        const fn = context.mock.fn();
         const o = new SharedObservable(() => fn);
         const sub1 = o.subscribe(() => {});
         const sub2 = o.subscribe(() => {});
         sub1.unsubscribe();
-        expect(fn).not.toHaveBeenCalled();
+        assertSame(fn.mock.callCount(), 0);
         sub2.unsubscribe();
-        expect(fn).toHaveBeenCalledOnce();
+        assertSame(fn.mock.callCount(), 1);
     });
-    it("runs teardown unsubscribable only on last unsubscribe", () => {
-        const fn = vi.fn();
+    it("runs teardown unsubscribable only on last unsubscribe", (context) => {
+        const fn = context.mock.fn();
         const o = new SharedObservable(() => ({ unsubscribe: fn }));
         const sub1 = o.subscribe(() => {});
         const sub2 = o.subscribe(() => {});
         sub1.unsubscribe();
-        expect(fn).not.toHaveBeenCalled();
+        assertSame(fn.mock.callCount(), 0);
         sub2.unsubscribe();
-        expect(fn).toHaveBeenCalledOnce();
+        assertSame(fn.mock.callCount(), 1);
     });
-    it("emits values to multiple subscribers", () => {
+    it("emits values to multiple subscribers", (context) => {
         let producer: SubscriptionObserver<number> | undefined;
         const o = new SharedObservable<number>(subscriber => {
             producer = subscriber;
         });
-        const fn1 = vi.fn();
+        const fn1 = context.mock.fn();
         o.subscribe(fn1);
-        const fn2 = vi.fn();
+        const fn2 = context.mock.fn();
         o.subscribe(fn2);
-        expect(producer).not.toBeNull();
+        assertNotNull(producer, );
         if (producer != null) {
             producer.next(23);
-            expect(fn1).toHaveBeenCalledOnce();
-            expect(fn1).toHaveBeenCalledWith(23);
-            expect(fn2).toHaveBeenCalledOnce();
-            expect(fn2).toHaveBeenCalledWith(23);
-            expect(producer.closed).toBe(false);
+            assertSame(fn1.mock.callCount(), 1);
+            assertSame(fn1.mock.calls[0].arguments[0], 23);
+            assertSame(fn2.mock.callCount(), 1);
+            assertSame(fn2.mock.calls[0].arguments[0], 23);
+            assertSame(producer.closed, false);
         }
     });
-    it("completes multiple subscribers", () => {
+    it("completes multiple subscribers", (context) => {
         let producer: SubscriptionObserver<number> | undefined;
         const o = new SharedObservable<number>(subscriber => {
             producer = subscriber;
         });
-        const fn1 = vi.fn();
+        const fn1 = context.mock.fn();
         o.subscribe({ complete: fn1 });
-        const fn2 = vi.fn();
+        const fn2 = context.mock.fn();
         o.subscribe({ complete: fn2 });
-        expect(producer).not.toBeNull();
+        assertNotNull(producer, );
         if (producer != null) {
             producer.complete();
-            expect(fn1).toHaveBeenCalledOnce();
-            expect(fn2).toHaveBeenCalledOnce();
-            expect(producer.closed).toBe(true);
+            assertSame(fn1.mock.callCount(), 1);
+            assertSame(fn2.mock.callCount(), 1);
+            assertSame(producer.closed, true);
         }
     });
-    it("emits error to multiple subscribers", () => {
+    it("emits error to multiple subscribers", (context) => {
         let producer: SubscriptionObserver<number> | undefined;
         const o = new SharedObservable<number>(subscriber => {
             producer = subscriber;
         });
-        const fn1 = vi.fn();
+        const fn1 = context.mock.fn();
         o.subscribe({ error: fn1 });
-        const fn2 = vi.fn();
+        const fn2 = context.mock.fn();
         o.subscribe({ error: fn2 });
-        expect(producer).not.toBeNull();
+        assertNotNull(producer, );
         if (producer != null) {
             const e = new Error("Foo!");
             producer.error(e);
-            expect(fn1).toHaveBeenCalledOnce();
-            expect(fn1).toHaveBeenCalledWith(e);
-            expect(fn2).toHaveBeenCalledOnce();
-            expect(fn2).toHaveBeenCalledWith(e);
-            expect(producer.closed).toBe(true);
+            assertSame(fn1.mock.callCount(), 1);
+            assertSame(fn1.mock.calls[0].arguments[0], e);
+            assertSame(fn2.mock.callCount(), 1);
+            assertSame(fn2.mock.calls[0].arguments[0], e);
+            assertSame(producer.closed, true);
         }
     });
-    it("immediately replays error on next subscription after error", () => {
+    it("immediately replays error on next subscription after error", (context) => {
         let producer: SubscriptionObserver<number> | undefined;
-        const startup = vi.fn();
-        const teardown = vi.fn();
+        const startup = context.mock.fn();
+        const teardown = context.mock.fn();
         const o = new SharedObservable<number>(subscriber => {
             startup();
             producer = subscriber;
             return teardown;
         });
         o.subscribe({ error: () => {} });
-        startup.mockReset();
+        startup.mock.resetCalls();
         if (producer != null) {
             const error = new Error("Foo!");
             producer.error(error);
-            expect(teardown).toHaveBeenCalledOnce();
-            teardown.mockReset();
-            const onError = vi.fn();
+            assertSame(teardown.mock.callCount(), 1);
+            teardown.mock.resetCalls();
+            const onError = context.mock.fn();
             o.subscribe({ error: onError });
-            expect(startup).not.toHaveBeenCalled();
-            expect(teardown).not.toHaveBeenCalled();
-            expect(onError).toHaveBeenCalledOnce();
-            expect(onError.mock.calls[0]).toEqual([ error ]);
+            assertSame(startup.mock.callCount(), 0);
+            assertSame(teardown.mock.callCount(), 0);
+            assertSame(onError.mock.callCount(), 1);
+            assertEquals(onError.mock.calls[0].arguments, [ error ]);
         }
     });
-    it("immediately replays complete on next subscription after completion", () => {
+    it("immediately replays complete on next subscription after completion", (context) => {
         let producer: SubscriptionObserver<number> | undefined;
-        const startup = vi.fn();
-        const teardown = vi.fn();
+        const startup = context.mock.fn();
+        const teardown = context.mock.fn();
         const o = new SharedObservable<number>(subscriber => {
             startup();
             producer = subscriber;
             return teardown;
         });
         o.subscribe(() => {});
-        startup.mockReset();
+        startup.mock.resetCalls();
         if (producer != null) {
             producer.complete();
-            expect(teardown).toHaveBeenCalledOnce();
-            teardown.mockReset();
-            const onComplete = vi.fn();
+            assertSame(teardown.mock.callCount(), 1);
+            teardown.mock.resetCalls();
+            const onComplete = context.mock.fn();
             o.subscribe({ complete: onComplete });
-            expect(startup).not.toHaveBeenCalled();
-            expect(teardown).not.toHaveBeenCalled();
-            expect(onComplete).toHaveBeenCalledOnce();
+            assertSame(startup.mock.callCount(), 0);
+            assertSame(teardown.mock.callCount(), 0);
+            assertSame(onComplete.mock.callCount(), 1);
         }
     });
     it("can be converted into RxJS observable", () => {
@@ -156,8 +157,8 @@ describe("SharedObservable", () => {
             throw new Error("Observer not exposed");
         }
         exposedObserver.next(1);
-        expect(values).toEqual([ 1 ]);
+        assertEquals(values, [ 1 ]);
         exposedObserver.next(2);
-        expect(values).toEqual([ 1, 2 ]);
+        assertEquals(values, [ 1, 2 ]);
     });
 });

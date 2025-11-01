@@ -3,13 +3,13 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Observer } from "./Observer.js";
-import { SubscriberFunction } from "./SubscriberFunction.js";
-import { Subscription } from "./Subscription.js";
-import { SubscriptionObserverImpl } from "./SubscriptionObserverImpl.js";
-import { TeardownLogic } from "./TeardownLogic.js";
-import { isUnsubscribable } from "./Unsubscribable.js";
-import { toError } from "./utils.js";
+import type { Observer } from "./Observer.ts";
+import type { SubscriberFunction } from "./SubscriberFunction.ts";
+import type { Subscription } from "./Subscription.ts";
+import { SubscriptionObserverImpl } from "./SubscriptionObserverImpl.ts";
+import type { TeardownLogic } from "./TeardownLogic.ts";
+import { isUnsubscribable } from "./Unsubscribable.ts";
+import { toError } from "./utils.ts";
 
 /**
  * Subscription implementation used internally by {@link observable/Observable}.
@@ -58,19 +58,19 @@ export class SubscriptionImpl<T> implements Subscription {
             if (this.closed) {
                 this.cleanup();
             }
-        } catch (e) {
+        } catch (error) {
             // Errors thrown by subscriber function are passed to the error handler of the subscription observer
-            subscriptionObserver.error(toError(e));
+            subscriptionObserver.error(toError(error));
         }
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public unsubscribe(): void {
         this.cleanup();
         this.close();
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public get closed(): boolean {
         return this.observer == null;
     }

@@ -5,12 +5,13 @@
 
 import "symbol-observable";
 
-import { from, merge, Subject } from "rxjs";
-import { describe, expect, it } from "vitest";
+import { Subject, from, merge } from "rxjs";
+import { describe, it } from "node:test";
 
-import { Observable } from "../main/Observable.js";
-import type { ObservableLike } from "../main/ObservableLike.js";
-import type { SubscriptionObserver } from "../main/SubscriptionObserver.js";
+import { Observable } from "../main/Observable.ts";
+import type { ObservableLike } from "../main/ObservableLike.ts";
+import type { SubscriptionObserver } from "../main/SubscriptionObserver.ts";
+import { assertEquals } from "@kayahr/assert";
 
 describe("ObservableLike", () => {
     it("can be converted into RxJS observable", () => {
@@ -25,9 +26,9 @@ describe("ObservableLike", () => {
             throw new Error("Observer not exposed");
         }
         exposedObserver.next(1);
-        expect(values).toEqual([ 1 ]);
+        assertEquals(values, [ 1 ]);
         exposedObserver.next(2);
-        expect(values).toEqual([ 1, 2 ]);
+        assertEquals(values, [ 1, 2 ]);
     });
     it("can be used in RxJS operators", () => {
         let exposedObserver: SubscriptionObserver<number> | undefined;
@@ -43,6 +44,6 @@ describe("ObservableLike", () => {
         }
         exposedObserver.next(1);
         subject.next(2);
-        expect(values).toEqual([ 1, 2 ]);
+        assertEquals(values, [ 1, 2 ]);
     });
 });

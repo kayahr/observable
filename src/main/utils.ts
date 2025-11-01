@@ -6,7 +6,7 @@
 /**
  * Checks if given object is iterable.
  *
- * @return True if iterable, false if not.
+ * @returns True if iterable, false if not.
  */
 export function isIterable<T>(object: unknown): object is Iterable<T> {
     return object != null && typeof (object as Iterable<unknown>)[Symbol.iterator] === "function";
@@ -17,7 +17,7 @@ export function isIterable<T>(object: unknown): object is Iterable<T> {
  * error is created with the string representation of the parameter as message.
  *
  * @param errorOrMessage - Either an error or some value which is used as error message.
- * @return Either the given error or a newly created error with the parameter used as error message.
+ * @returns Either the given error or a newly created error with the parameter used as error message.
  */
 export function toError(errorOrMessage: unknown): Error {
     if (errorOrMessage instanceof Error) {

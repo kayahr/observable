@@ -3,25 +3,31 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Observer } from "./Observer.js";
-import { SubscriptionObserver } from "./SubscriptionObserver.js";
-import { toError } from "./utils.js";
+import type { Observer } from "./Observer.ts";
+import type { SubscriptionObserver } from "./SubscriptionObserver.ts";
+import { toError } from "./utils.ts";
 
 /**
  * Implementation of {@link observable/SubscriptionObserver} which is internally passed to the subscriber function of
  * an {@link observable/Observable}.
  */
 export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
+    private observer: Observer<T> | null;
+    private readonly onClose: () => void;
+    private readonly onCleanup: () => void;
+
     /**
      * Creates new subscription observer.
      *
-     * @param observer - The observer which has been subscribed to the observable.
+     * @param observer  - The observer which has been subscribed to the observable.
+     * @param onClose   - Callback called when observer is closed.
+     * @param onCleanup - Callback called when observer is cleaned up.
      */
-    public constructor(
-        private observer: Observer<T> | null,
-        private readonly onClose: () => void,
-        private readonly onCleanup: () => void
-    ) {
+    public constructor(observer: Observer<T> | null, onClose: () => void, onCleanup: () => void) {
+        this.observer = observer;
+        this.onClose = onClose;
+        this.onCleanup = onCleanup;
+
         // Needed to satisfy es-observable-tests, which are (IMHO) to strict
         this.constructor = Object;
     }
@@ -36,25 +42,25 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
         }
     }
 
-    /** @inherited */
+    /** @inheritdoc */
     public get closed(): boolean {
         return this.observer == null;
     }
 
-    /** @inherited */
+    /** @inheritdoc */
     public next(arg: T): unknown {
         try {
             return this.observer?.next?.(arg);
-        } catch (e) {
+        } catch (error) {
             try {
-                return this.error(toError(e));
+                return this.error(toError(error));
             } catch {
-                throw e;
+                throw error;
             }
         }
     }
 
-    /** @inherited */
+    /** @inheritdoc */
     public error(e: Error): unknown {
         const observer = this.observer;
         try {
@@ -80,7 +86,7 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
         }
     }
 
-    /** @inherited */
+    /** @inheritdoc */
     public complete(arg?: unknown): unknown {
         const observer = this.observer;
         try {
@@ -88,13 +94,13 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
             const result = observer?.complete?.(arg);
             this.onCleanup();
             return result;
-        } catch (e) {
+        } catch (error) {
             try {
                 this.onCleanup();
             } catch {
                 // Already handling an error. Additional errors during cleanup are intentionally ignored.
             }
-            throw e;
+            throw error;
         }
     }
 }

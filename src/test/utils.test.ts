@@ -3,9 +3,10 @@
  * See LICENSE.md for licensing information
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
 
-import { isIterable, toError } from "../main/utils.js";
+import { isIterable, toError } from "../main/utils.ts";
+import { assertSame } from "@kayahr/assert";
 
 class Test<T> implements Iterable<T> {
     public [Symbol.iterator](): Iterator<T> {
@@ -16,23 +17,23 @@ class Test<T> implements Iterable<T> {
 describe("utils", () => {
     describe("isIterable", () => {
         it("returns true for iterable object", () => {
-            expect(isIterable(new Test())).toBe(true);
-            expect(isIterable([ 1, 2, 3 ])).toBe(true);
-            expect(isIterable(new Uint8Array([ 1, 2, 3 ]))).toBe(true);
-            expect(isIterable("34")).toBe(true);
+            assertSame(isIterable(new Test()), true);
+            assertSame(isIterable([ 1, 2, 3 ]), true);
+            assertSame(isIterable(new Uint8Array([ 1, 2, 3 ])), true);
+            assertSame(isIterable("34"), true);
         });
         it("returns false for non-Iterable objects", () => {
-            expect(isIterable({})).toBe(false);
-            expect(isIterable(34)).toBe(false);
-            expect(isIterable(null)).toBe(false);
-            expect(isIterable(undefined)).toBe(false);
-            expect(isIterable(true)).toBe(false);
+            assertSame(isIterable({}), false);
+            assertSame(isIterable(34), false);
+            assertSame(isIterable(null), false);
+            assertSame(isIterable(undefined), false);
+            assertSame(isIterable(true), false);
         });
         it("supports optional value type parameter", () => {
             const a = [ 1 ] as Iterable<unknown> | number;
             if (isIterable<number>(a)) {
                 for (const value of a) {
-                    expect(value.toFixed(2)).toBe("1.00");
+                    assertSame(value.toFixed(2), "1.00");
                 }
             }
         });
@@ -40,12 +41,22 @@ describe("utils", () => {
     describe("toError", () => {
         it("returns error as-is", () => {
             const e = new Error("test");
-            expect(toError(e)).toBe(e);
+            assertSame(toError(e), e);
         });
-        it("returns new error with given value as message", () => {
-            expect(toError("Test")).toEqual(new Error("Test"));
-            expect(toError(2)).toEqual(new Error("2"));
-            expect(toError(null)).toEqual(new Error("null"));
+        it("returns new error with given string value as message", () => {
+            const error = toError("Test");
+            assertSame(error.constructor, Error);
+            assertSame(error.message, "Test");
+        });
+        it("returns new error with given numeric value as message", () => {
+            const error = toError(2);
+            assertSame(error.constructor, Error);
+            assertSame(error.message, "2");
+        });
+        it("returns new error with given null value as message", () => {
+            const error = toError(null);
+            assertSame(error.constructor, Error);
+            assertSame(error.message, "null");
         });
     });
 });

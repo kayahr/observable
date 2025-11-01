@@ -3,13 +3,13 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Subscription } from "./Subscription.js";
+import type { Subscription } from "./Subscription.ts";
 
 /**
  * Partial interface type for observer defining a mandatory `next` method. Used to construct the actual
  * {@link Observer} type.
  */
-export type NextObserver<T = unknown> = {
+export interface NextObserver<T = unknown> {
     /**
      * Receives the next value in the sequence.
      *
@@ -22,7 +22,7 @@ export type NextObserver<T = unknown> = {
  * Partial interface type for observer defining a mandatory `error` method. Used to construct the actual
  * {@link Observer} type.
  */
-export type ErrorObserver = {
+export interface ErrorObserver {
     /**
      * Receives the sequence error.
      *
@@ -35,7 +35,7 @@ export type ErrorObserver = {
  * Partial interface type for observer defining a mandatory `complete` method. Used to construct the actual
  * {@link Observer} type.
  */
-export type CompleteObserver = {
+export interface CompleteObserver {
     /**
      * Receives a completion notification.
      *

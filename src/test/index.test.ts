@@ -3,25 +3,25 @@
  * See LICENSE.md for licensing information
  */
 
-import { describe, expect, it } from "vitest";
-
-import * as exports from "../main/index.js";
-import { type InteropObservable, type InteropSubscribable } from "../main/interop.js";
-import { Observable } from "../main/Observable.js";
-import { type ObservableLike } from "../main/ObservableLike.js";
-import { type CompleteObserver, type ErrorObserver, type NextObserver, type Observer } from "../main/Observer.js";
-import { SharedObservable } from "../main/SharedObservable.js";
-import { isSubscribable, type Subscribable } from "../main/Subscribable.js";
-import { type SubscriberFunction } from "../main/SubscriberFunction.js";
-import { type Subscription } from "../main/Subscription.js";
-import { type SubscriptionObserver } from "../main/SubscriptionObserver.js";
-import { type TeardownLogic } from "../main/TeardownLogic.js";
-import { isUnsubscribable, type Unsubscribable } from "../main/Unsubscribable.js";
+import { describe, it } from "node:test";
+import { assertEquals } from "@kayahr/assert";
+import * as exports from "../main/index.ts";
+import type { InteropObservable, InteropSubscribable } from "../main/interop.ts";
+import { Observable } from "../main/Observable.ts";
+import type { ObservableLike } from "../main/ObservableLike.ts";
+import type { CompleteObserver, ErrorObserver, NextObserver, Observer } from "../main/Observer.ts";
+import { SharedObservable } from "../main/SharedObservable.ts";
+import { type Subscribable, isSubscribable } from "../main/Subscribable.ts";
+import type { SubscriberFunction } from "../main/SubscriberFunction.ts";
+import type { Subscription } from "../main/Subscription.ts";
+import type { SubscriptionObserver } from "../main/SubscriptionObserver.ts";
+import type { TeardownLogic } from "../main/TeardownLogic.ts";
+import { type Unsubscribable, isUnsubscribable } from "../main/Unsubscribable.ts";
 
 describe("index", () => {
     it("exports relevant types and functions and nothing more", () => {
         // Check classes and enums
-        expect({ ...exports }).toEqual({
+        assertEquals({ ...exports }, {
             isSubscribable,
             isUnsubscribable,
             Observable,

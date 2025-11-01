@@ -5,15 +5,15 @@
 
 import "symbol-observable";
 
-import type { InteropSubscribable } from "./interop.js";
-import { ObservableLike } from "./ObservableLike.js";
-import { Observer } from "./Observer.js";
-import { isSubscribable, Subscribable } from "./Subscribable.js";
-import type { SubscribeArgs } from "./SubscribeArgs.js";
-import { SubscriberFunction } from "./SubscriberFunction.js";
-import { Subscription } from "./Subscription.js";
-import { SubscriptionImpl } from "./SubscriptionImpl.js";
-import { isIterable } from "./utils.js";
+import type { InteropSubscribable } from "./interop.ts";
+import type { ObservableLike } from "./ObservableLike.ts";
+import type { Observer } from "./Observer.ts";
+import { type Subscribable, isSubscribable } from "./Subscribable.ts";
+import type { SubscribeArgs } from "./SubscribeArgs.ts";
+import type { SubscriberFunction } from "./SubscriberFunction.ts";
+import type { Subscription } from "./Subscription.ts";
+import { SubscriptionImpl } from "./SubscriptionImpl.ts";
+import { isIterable } from "./utils.ts";
 
 /**
  * Interface of an observable constructor.
@@ -30,7 +30,7 @@ export interface ObservableConstructor<T> {
      * Converts any observable object or iterable to an {@link Observable}.
      *
      * @param items - The items to convert.
-     * @return The created observable.
+     * @returns The created observable.
      */
     of(...items: T[]): ObservableLike<T>;
 
@@ -38,7 +38,7 @@ export interface ObservableConstructor<T> {
      * Converts an observable or iterable to an Observable.
      *
      * @param observable - The observable or iterable to convert.
-     * @return The created observable.
+     * @returns The created observable.
      */
     from(observable: Subscribable<T> | Iterable<T>): ObservableLike<T>;
 }
@@ -82,15 +82,15 @@ export class Observable<T> implements ObservableLike<T> {
         return createObservableFrom<T>(this, Observable, observable);
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public [Symbol.observable](): InteropSubscribable<T> {
         return this;
     }
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public subscribe(observer: Observer<T>): Subscription;
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public subscribe(onNext: (value: T) => void, onError?: (error: Error) => void,
         onComplete?: () => void): Subscription;
 
@@ -103,7 +103,7 @@ export class Observable<T> implements ObservableLike<T> {
     /** @deprecated Use an observer instead of a complete callback */
     public subscribe(next: (value: T) => void, error: null | undefined, complete: () => void): Subscription;
 
-    /** @inheritDoc */
+    /** @inheritdoc */
     public subscribe(arg1: (Observer<T> | ((value: T) => void) | null | undefined),
             ...rest: [ (((error: Error) => void) | null)?, ((() => void) | null)? ]): Subscription {
         // This hack is needed because the observable spec unit tests require the method to have ONE fixed argument.

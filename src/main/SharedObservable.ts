@@ -3,11 +3,11 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Observable } from "./Observable.js";
-import { SubscriberFunction } from "./SubscriberFunction.js";
-import { SubscriptionObserver } from "./SubscriptionObserver.js";
-import { TeardownLogic } from "./TeardownLogic.js";
-import { isUnsubscribable } from "./Unsubscribable.js";
+import { Observable } from "./Observable.ts";
+import type { SubscriberFunction } from "./SubscriberFunction.ts";
+import type { SubscriptionObserver } from "./SubscriptionObserver.ts";
+import type { TeardownLogic } from "./TeardownLogic.ts";
+import { isUnsubscribable } from "./Unsubscribable.ts";
 
 /**
  * A shared observable is a multicast observable maintaining an internal list of subscribers. The subscriber function
@@ -32,17 +32,25 @@ export class SharedObservable<T> extends Observable<T> {
             if (subscribers.size === 1) {
                 teardown = multicastSubscriber({
                     get closed(): boolean { return subscriber.closed; },
-                    next: v => subscribers.forEach(subscriber => subscriber.next(v)),
+                    next: v => {
+                        for (const subscriber of subscribers) {
+                            subscriber.next(v);
+                        }
+                    },
                     error: e => {
                         if (!isComplete && error == null) {
                             error = e;
-                            subscribers.forEach(subscriber => subscriber.error(e));
+                            for (const subscriber of subscribers) {
+                                subscriber.error(e);
+                            }
                         }
                     },
                     complete: () => {
                         if (!isComplete && error == null) {
                             isComplete = true;
-                            subscribers.forEach(subscriber => subscriber.complete());
+                            for (const subscriber of subscribers) {
+                                subscriber.complete();
+                            }
                         }
                     }
                 });

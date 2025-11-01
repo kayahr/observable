@@ -3,7 +3,7 @@
  * See LICENSE.md for licensing information.
  */
 
-import { Unsubscribable } from "./Unsubscribable.js";
+import type { Unsubscribable } from "./Unsubscribable.ts";
 
 /**
  * Interface for subscriptions.

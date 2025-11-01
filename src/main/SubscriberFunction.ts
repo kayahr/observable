@@ -3,8 +3,8 @@
  * See LICENSE.md for licensing information.
  */
 
-import { SubscriptionObserver } from "./SubscriptionObserver.js";
-import { TeardownLogic } from "./TeardownLogic.js";
+import type { SubscriptionObserver } from "./SubscriptionObserver.ts";
+import type { TeardownLogic } from "./TeardownLogic.ts";
 
 /**
  * The type of the subscriber function passed to the observable constructor.
