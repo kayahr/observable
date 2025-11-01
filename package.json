@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/package",
     "name": "@kayahr/observable",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "type": "module",
     "description": "Simple observable implementation",
     "keywords": [
