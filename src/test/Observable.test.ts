@@ -124,7 +124,7 @@ describe("Observable", () => {
             private readonly factor: number = 4;
 
             public error(e: Error): void {
-                values.push(+e.message * this.factor);
+                values.push(Number(e.message) * this.factor);
             }
         }
         observable.subscribe(new MyObserver());
