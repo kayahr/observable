@@ -21,7 +21,7 @@ describe("ObservableLike", () => {
         });
         const rxjsObservable = from(observable);
         const values: number[] = [];
-        rxjsObservable.subscribe(value => values.push(value));
+        rxjsObservable.subscribe(value => { values.push(value) });
         if (exposedObserver == null) {
             throw new Error("Observer not exposed");
         }
@@ -38,7 +38,7 @@ describe("ObservableLike", () => {
         const subject = new Subject<number>();
         const mergedObservable = merge(subject, observable);
         const values: number[] = [];
-        mergedObservable.subscribe(value => values.push(value));
+        mergedObservable.subscribe(value => { values.push(value) });
         if (exposedObserver == null) {
             throw new Error("Observer not exposed");
         }

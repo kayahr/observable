@@ -48,7 +48,7 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
     }
 
     /** @inheritdoc */
-    public next(arg: T): unknown {
+    public next(arg: T): void {
         try {
             return this.observer?.next?.(arg);
         } catch (error) {
@@ -61,7 +61,7 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
     }
 
     /** @inheritdoc */
-    public error(e: Error): unknown {
+    public error(e: Error): void {
         const observer = this.observer;
         try {
             this.close();
@@ -87,7 +87,7 @@ export class SubscriptionObserverImpl<T> implements SubscriptionObserver<T> {
     }
 
     /** @inheritdoc */
-    public complete(arg?: unknown): unknown {
+    public complete(arg?: unknown): void {
         const observer = this.observer;
         try {
             this.close();

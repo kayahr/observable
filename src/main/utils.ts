@@ -20,9 +20,5 @@ export function isIterable<T>(object: unknown): object is Iterable<T> {
  * @returns Either the given error or a newly created error with the parameter used as error message.
  */
 export function toError(errorOrMessage: unknown): Error {
-    if (errorOrMessage instanceof Error) {
-        return errorOrMessage;
-    } else {
-        return new Error(String(errorOrMessage));
-    }
+    return errorOrMessage instanceof Error ? errorOrMessage : new Error(String(errorOrMessage));
 }
